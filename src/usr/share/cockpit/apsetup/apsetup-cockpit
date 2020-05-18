@@ -1,0 +1,20 @@
+#!/bin/bash
+echo "Please wait"
+if [ ! -f /etc/NetworkManager/system-connections/ap.nmconnection ]; then
+	cp /usr/share/cockpit/apsetup/ap.nmconnection /etc/NetworkManager/system-connections/ap.nmconnection
+	chmod 600 /etc/NetworkManager/system-connections/*
+fi
+chmod 600 /etc/ap.conf
+sed -i -e s"@ssid=.*@ssid=$1@g" /etc/NetworkManager/system-connections/ap.nmconnection 
+sed -i -e s"@psk=.*@psk=$2@g" /etc/NetworkManager/system-connections/ap.nmconnection
+sed -i -e s"@address1=.*@address1=$3/24,@g" /etc/NetworkManager/system-connections/ap.nmconnection
+sed -i -e s"@AP_SSID=.*@AP_SSID=$1@g" /etc/ap.conf
+sed -i -e s"@AP_PASS=.*@AP_PASS=$2@g" /etc/ap.conf
+sed -i -e s"@AP_IP=.*@AP_IP=$3@g" /etc/ap.conf
+sed -i -e s"@NET_CONNECT=.*@NET_CONNECT=$4@g" /etc/ap.conf
+if [ ! -f /etc/NetworkManager/dispatcher.d/90apnmdispatcher ]; then
+	cp /usr/share/cockpit/apsetup/90apnmdispatcher /etc/NetworkManager/dispatcher.d/
+fi
+/usr/bin/nmcli con reload 
+/usr/bin/nmcli con up AP
+echo "Setup completed, please reconnect to the access point if needed"

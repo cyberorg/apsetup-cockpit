@@ -1,0 +1,17 @@
+#!/bin/bash
+#setup dnsmasq on IP address change
+if [ "$2" = "up" ];then
+	if test -f /etc/ap.conf; then
+		. /etc/ap.conf
+		. /usr/share/cockpit/apsetup/networkvariables.sh 2>/dev/null|| true
+		if [ ! -z "$DHCPD_INTERFACE" ]; then
+			if [[ x"$NET_CONNECT" == xtrue ]]; then
+				iptables -L -t nat | grep MASQ || iptables -t nat -A POSTROUTING -o $DHCPD_INTERFACE -j MASQUERADE
+			else
+				iptables -t nat -D POSTROUTING -o $DHCPD_INTERFACE -j MASQUERADE
+			fi
+		fi
+	fi
+	/usr/share/cockpit/apsetup/mssipchangeap 2>/dev/null || true
+fi
+
