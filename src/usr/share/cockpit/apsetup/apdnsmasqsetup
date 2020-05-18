@@ -21,6 +21,9 @@
 . /usr/share/cockpit/apsetup/networkvariablesap.sh
 sysctl -w net.ipv4.ip_forward=1
 ln -snf /etc/resolv.conf /run/dnsmasq/resolv.conf
+if [ ! -f /etc/dnsmasq.d/hotspot.conf ]; then
+        cp /usr/share/cockpit/apsetup/hotspot.conf /etc/dnsmasq.d/hotspot.conf
+fi
 for eth_ in $DHCP_IFACES
 	do
 	((i++))
@@ -43,7 +46,9 @@ for eth_ in $DHCP_IFACES
 	sed -i -e s"@dhcp-range=.*@dhcp-range=$range_start,$range_end,8h@g" /etc/dnsmasq.d/hotspot.conf
 	sed -i -e s"@dhcp-option=3.*@dhcp-option=3,$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
 	sed -i -e s"@dhcp-option=6.*@dhcp-option=6,$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
+	sed -i -e s"@address=mss.*@address=/mss.server/$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
+	sed -i -e s"@address=ako.*@address=/ako.home/$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
 done
 touch /etc/dnsmasq.d/network-manager && rm /etc/dnsmasq.d/network-manager
 systemctl restart dnsmasq
-
+sed -i -e s"@http://.*:@http://$SERVER_IP:@g" /var/www/html/mss/index.html 2>/dev/null || true
