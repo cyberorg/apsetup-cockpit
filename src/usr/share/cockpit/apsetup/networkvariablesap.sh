@@ -9,8 +9,8 @@ ip_address(){
 # 	return 0
 	
 	#ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | egrep -v "^127\." | grep -v tun | grep -v dock | grep -v veth | grep -v br-
-	AP_IP=$(cat /etc/NetworkManager/system-connections/akohome.nmconnection |grep address1|cut -d "=" -f 2 |cut -d , -f 1)
-	AP_INT=$(cat /etc/NetworkManager/system-connections/akohome.nmconnection | grep interface-name | cut -d "=" -f2)
+	AP_IP=$(cat /etc/NetworkManager/system-connections/ap.nmconnection |grep address1|cut -d "=" -f 2 |cut -d , -f 1)
+	AP_INT=$(cat /etc/NetworkManager/system-connections/ap.nmconnection | grep interface-name | cut -d "=" -f2)
 	echo $AP_IP $AP_INT
 }
 wl_interface(){

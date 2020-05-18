@@ -1,6 +1,7 @@
 #!/bin/bash
 #setup dnsmasq on IP address change
 if [ "$2" = "up" ];then
+	/usr/share/cockpit/apsetup/apdnsmasqsetup 2>/dev/null || true
 	if test -f /etc/ap.conf; then
 		. /etc/ap.conf
 		. /usr/share/cockpit/apsetup/networkvariables.sh 2>/dev/null|| true
@@ -12,6 +13,5 @@ if [ "$2" = "up" ];then
 			fi
 		fi
 	fi
-	/usr/share/cockpit/apsetup/apdnsmasqsetup 2>/dev/null || true
 fi
 
