@@ -4,6 +4,9 @@ if [ ! -f /etc/NetworkManager/system-connections/ap.nmconnection ]; then
 	cp /usr/share/cockpit/apsetup/ap.nmconnection /etc/NetworkManager/system-connections/ap.nmconnection
 	chmod 600 /etc/NetworkManager/system-connections/*
 fi
+if [ ! -f /etc/dnsmasq.d/hotspot.conf ]; then
+	cp /usr/share/cockpit/apsetup/hotspot.conf /etc/dnsmasq.d/hotspot.conf
+fi
 chmod 600 /etc/ap.conf
 sed -i -e s"@ssid=.*@ssid=$1@g" /etc/NetworkManager/system-connections/ap.nmconnection 
 sed -i -e s"@psk=.*@psk=$2@g" /etc/NetworkManager/system-connections/ap.nmconnection
