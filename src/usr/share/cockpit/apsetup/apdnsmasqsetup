@@ -48,7 +48,6 @@ for eth_ in $DHCP_IFACES
 done
 touch /etc/dnsmasq.d/network-manager && rm /etc/dnsmasq.d/network-manager
 systemctl restart dnsmasq
-sed -i -e s"@http://.*:@http://$SERVER_IP:@g" /var/www/html/mss/index.html 2>/dev/null || true
 
 
 
