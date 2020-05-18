@@ -5,7 +5,6 @@ Needs **dnsmasq** and a system using **Network Manager**
 
 ```console
 cp src/etc/ap.conf /etc/
-cp src/etc/dnsmasq.d/hotspot.conf /etc/dnsmasq.d/
 cp -r src/usr/share/cockpit/apsetup /usr/share/cockpit/
 ```
 
