@@ -1,15 +1,12 @@
 #!/bin/bash
 #======================================
 # Helper function - return ethernet interface and ip-address
-# created for easy testing
 #--------------------------------------
-ip_address(){
-# cat << EOF | awk '/inet6/{next} /inet.*eth[0-9]+|br[0-9]+/{print $2 " " $7 }'
-# EOF
-# 	return 0
-	
-	ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | egrep -v "^127\." | grep -v tun | grep -v wl |grep -v dock | grep -v veth | grep -v br-
+AP_IP=$(cat /etc/NetworkManager/system-connections/ap.nmconnection |grep address1|cut -d "=" -f 2 |cut -d , -f 1 | cut -d / -f 1)
+AP_INT=$(cat /etc/NetworkManager/system-connections/ap.nmconnection | grep interface-name | cut -d "=" -f2)
 
+ip_address(){
+	ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | egrep -v "^127\." | grep -v tun | grep -v wl |grep -v dock | grep -v veth | grep -v br-
 }
 wl_interface(){
 	export WL_IFACE=`ifconfig -a|grep wl|cut -d ":" -f1`
@@ -20,10 +17,6 @@ wl_interface(){
 # created for easy testing
 #--------------------------------------
 ip_route(){
-# cat << EOF 
-# EOF
-# 	return 0
-	
 	ip route
 }
 
@@ -94,7 +87,7 @@ init_network_variables() {
 			echo "Interface $eth_ is connected to your default network and will not be used to provide ltsp services,"
 			echo "if you want to change it, please edit variable DHCP_IFACES in file $KIWI_LTSP_CONF_FILE"
 		fi
-		echo "Next interfaces will be configured to provide ltsp services: $default_eths"
+		echo "Next interfaces will be configured to provide internet services: $default_eths"
 	#======================================
 	# ip-addresses and interfaces defined
 	#--------------------------------------
@@ -106,43 +99,15 @@ init_network_variables() {
 		exit 1
 	fi
 	
-	#======================================
-	# Fix $default_ips variable if it not corresponding $default_eths
-	#--------------------------------------
-	local i=0
-	for eth_ in $default_eths
-		do
-		((i++))
-		local ip_="`echo $default_ips  | cut -f$i -d' ' `"
-		#======================================
-		# Check for conflict in SERVER_IPS and DHCP_IFACES
-		#--------------------------------------
-		if [[ -z "`ip_address  | grep $eth_ | grep $ip_ | cut -f1 -d' ' `" ]] ; then
-			echo "Warning: value($ip_) of SERVER_IPS variable don't match to value($eth_) of DHCP_IFACES - try to redetect $ip_..."
-			local ip_new="`ip_address  | grep $eth_ | cut -f1 -d'/'`"
-			if [[ -z $ip_new ]] ; then
-				echo "Error: can't detect ip for \"$eth_\", exiting"
-				exit 1
-			fi
-			# fix SERVER_IPS
-			if [[ -z $ip_ ]] ; then
-				SERVER_IPS="$SERVER_IPS $ip_new"
-			else
-				SERVER_IPS=$(echo $SERVER_IPS | tr ' ' '\n' | sed  -e "${i}c${ip_new}" | tr '\n' ' ' )
-			fi
-			#re-export new detected IP
-			default_ips="$SERVER_IPS"
-			export SERVER_IP=$(echo $SERVER_IPS | cut -f1 -d' ')
-		fi
-	done
+	export SERVER_IP=$AP_IP
 	#======================================
 	# Init DHCP_SUBNETS, DHCP_NETMASKS and DHCP_RANGES
 	#--------------------------------------
 	i=0
-	for eth_ in $default_eths
+	for eth_ in  $AP_INT
 		do
 		((i++))
-		local ip_="`echo $default_ips  | cut -f$i -d' ' `"
+		local ip_="$SERVER_IP"
 		#======================================
 		# Convert netmask from /N to N.N.N.N
 		#--------------------------------------
@@ -194,12 +159,6 @@ init_network_variables() {
 	# Init global network variables 
 	#--------------------------------------
 	DHCPD_INTERFACE="$DHCP_IFACES"
-	# update config files
-#	update_variable SERVER_IPS  $TESTDIR/$KIWI_LTSP_CONF_FILE
-#	update_variable DHCP_IFACES $TESTDIR/$KIWI_LTSP_CONF_FILE
-#	if [ -f $TESTDIR/etc/sysconfig/dhcpd ]; then
-#		update_variable DHCPD_INTERFACE $TESTDIR/etc/sysconfig/dhcpd
-#	fi
 	#======================================
 	# check networking variables 
 	#--------------------------------------
