@@ -18,15 +18,15 @@
 # Authors:      Jigish Gohil <cyberorg@cyberorg.info>
 #               Alex Savin <alexqwesa@opensuse.org>
 
-. /usr/share/cockpit/apsetup/networkvariablesap.sh
+. /usr/share/cockpit/apsetup/networkvariables.sh
 sysctl -w net.ipv4.ip_forward=1
 ln -snf /etc/resolv.conf /run/dnsmasq/resolv.conf
 if [ ! -f /etc/dnsmasq.d/hotspot.conf ]; then
         cp /usr/share/cockpit/apsetup/hotspot.conf /etc/dnsmasq.d/hotspot.conf
 fi
-for eth_ in $DHCP_IFACES
+for eth_ in $AP_INT 
 	do
-	((i++))
+#	((i++))
 	export sub_net="`echo $DHCP_SUBNETS  | cut -f$i -d' ' `"
 	export netmask="`echo $DHCP_NETMASKS | cut -f$i -d' ' `"
 	export range_start="`echo $DHCP_RANGES   | cut -f$((i*2-1)) -d' ' `"
@@ -49,4 +49,3 @@ for eth_ in $DHCP_IFACES
 done
 touch /etc/dnsmasq.d/network-manager && rm /etc/dnsmasq.d/network-manager
 systemctl restart dnsmasq
-
