@@ -163,8 +163,7 @@ init_network_variables() {
 	# check networking variables 
 	#--------------------------------------
 	if [ ! "$DOMAIN" -o ! "$NAME_SERVERS" -o ! "$GATEWAYS" -o ! "$TFTP_SERVERS" -o ! "$DHCP_RANGES" -o ! "$DHCP_SUBNETS" -o ! "$DHCP_NETMASKS" -o ! "$SERVER_IPS" -o ! "$SERVER_IP" ]; then
-		echo "One or more KIWI LTSP networking variables are empty. Aborting!"
-		exit 1
+		echo "One or more KIWI LTSP networking variables are empty."
 	fi
 	wl_interface
 }
