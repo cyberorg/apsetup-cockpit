@@ -1,10 +1,12 @@
 #!/bin/bash
 echo "Please wait"
+export WL_IFACE=`ifconfig -a|grep wl|cut -d ":" -f1`
 if [ ! -f /etc/NetworkManager/system-connections/ap.nmconnection ]; then
 	cp /usr/share/cockpit/apsetup/ap.nmconnection /etc/NetworkManager/system-connections/ap.nmconnection
 	chmod 600 /etc/NetworkManager/system-connections/*
 fi
 chmod 600 /etc/ap.conf
+sed -i -e s"@interface-name=.*@interface-name==$WL_IFACE@g" /etc/NetworkManager/system-connections/ap.nmconnection
 sed -i -e s"@ssid=.*@ssid=$1@g" /etc/NetworkManager/system-connections/ap.nmconnection 
 sed -i -e s"@psk=.*@psk=$2@g" /etc/NetworkManager/system-connections/ap.nmconnection
 sed -i -e s"@address1=.*@address1=$3/24,@g" /etc/NetworkManager/system-connections/ap.nmconnection
