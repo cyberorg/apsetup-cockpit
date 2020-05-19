@@ -84,8 +84,8 @@ init_network_variables() {
 			ip_="`ip_address  | grep $eth_ | cut -f1 -d' ' `"
 			default_eths=$(echo $default_eths | tr '[:space:]' '\n' | grep -v "$eth_" | tr '\n' ' ' )
 			default_ips=$(echo $default_ips | tr '[:space:]' '\n' | grep -v "$ip_" | tr '\n' ' ' )
-			echo "Interface $eth_ is connected to your default network and will not be used to provide ltsp services,"
-			echo "if you want to change it, please edit variable DHCP_IFACES in file $KIWI_LTSP_CONF_FILE"
+			echo "Interface $eth_ is connected to your default network and will be used to provide internet services,"
+			default_eths=$eth_
 		fi
 		echo "Next interfaces will be configured to provide internet services: $default_eths"
 	#======================================
