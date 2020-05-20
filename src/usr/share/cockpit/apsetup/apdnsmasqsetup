@@ -17,14 +17,14 @@
 #
 # Authors:      Jigish Gohil <cyberorg@cyberorg.info>
 #               Alex Savin <alexqwesa@opensuse.org>
-
+#This script sets up dnsmasq dhcp server for the Access Point clients
 . /usr/share/cockpit/apsetup/networkvariables.sh
 sysctl -w net.ipv4.ip_forward=1
 ln -snf /etc/resolv.conf /run/dnsmasq/resolv.conf
 if [ ! -f /etc/dnsmasq.d/hotspot.conf ]; then
         cp /usr/share/cockpit/apsetup/hotspot.conf /etc/dnsmasq.d/hotspot.conf
 fi
-for eth_ in $AP_INT 
+for eth_ in $WL_IFACE 
 	do
 #	((i++))
 	export sub_net="`echo $DHCP_SUBNETS  | cut -f$i -d' ' `"
