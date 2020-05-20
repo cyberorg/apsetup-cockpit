@@ -1,22 +1,21 @@
 #!/bin/bash
 echo "Please wait"
+#Create or modify NM configuration for the Access Point
 export WL_IFACE=`ifconfig -a|grep wl|cut -d ":" -f1`
-if [ ! -f /etc/NetworkManager/system-connections/ap.nmconnection ]; then
-	cp /usr/share/cockpit/apsetup/ap.nmconnection /etc/NetworkManager/system-connections/ap.nmconnection
-	chmod 600 /etc/NetworkManager/system-connections/*
+if ! grep -q "id=ap" /etc/NetworkManager/system-connections/*; then
+	nmcli con add type wifi ifname $WL_IFACE con-name ap autoconnect yes ssid $1 ipv4.method manual ipv4.addresses $3/24 wifi-sec.key-mgmt wpa-psk wifi-sec.psk "$2" 802-11-wireless.mode ap
+else
+	nmcli con modify ap ssid $1 ipv4.addresses $3/24 wifi-sec.psk "$2"
 fi
+#Set config file permission so only root can read
 chmod 600 /etc/ap.conf
-sed -i -e s"@interface-name=.*@interface-name=$WL_IFACE@g" /etc/NetworkManager/system-connections/ap.nmconnection
-sed -i -e s"@ssid=.*@ssid=$1@g" /etc/NetworkManager/system-connections/ap.nmconnection 
-sed -i -e s"@psk=.*@psk=$2@g" /etc/NetworkManager/system-connections/ap.nmconnection
-sed -i -e s"@address1=.*@address1=$3/24,@g" /etc/NetworkManager/system-connections/ap.nmconnection
-sed -i -e s"@AP_SSID=.*@AP_SSID=$1@g" /etc/ap.conf
-sed -i -e s"@AP_PASS=.*@AP_PASS=$2@g" /etc/ap.conf
-sed -i -e s"@AP_IP=.*@AP_IP=$3@g" /etc/ap.conf
+#Setting for iptable MASQUERADE
 sed -i -e s"@NET_CONNECT=.*@NET_CONNECT=$4@g" /etc/ap.conf
+#Copy the NM dispatcher script to set up iptables rule and dnsmasq dhcp server
 if [ ! -f /etc/NetworkManager/dispatcher.d/90apnmdispatcher ]; then
 	cp /usr/share/cockpit/apsetup/90apnmdispatcher /etc/NetworkManager/dispatcher.d/
 fi
+#Reload and bring up the Access Point
 /usr/bin/nmcli con reload 
-/usr/bin/nmcli con up AP
+/usr/bin/nmcli con up ap 
 echo "Setup completed, please reconnect to the access point if needed"

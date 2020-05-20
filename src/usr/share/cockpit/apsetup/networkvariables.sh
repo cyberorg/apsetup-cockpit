@@ -1,16 +1,16 @@
 #!/bin/bash
+#Script to get various network variables
 #======================================
 # Helper function - return ethernet interface and ip-address
 #--------------------------------------
-AP_IP=$(cat /etc/NetworkManager/system-connections/ap.nmconnection |grep address1|cut -d "=" -f 2 |cut -d , -f 1 | cut -d / -f 1)
-AP_INT=$(cat /etc/NetworkManager/system-connections/ap.nmconnection | grep interface-name | cut -d "=" -f2)
-
 ip_address(){
 	ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | egrep -v "^127\." | grep -v tun | grep -v wl |grep -v dock | grep -v veth | grep -v br-
 }
 wl_interface(){
 	export WL_IFACE=`ifconfig -a|grep wl|cut -d ":" -f1`
 }
+wl_interface
+AP_IP=$(ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | grep $WL_IFACE | cut -d / -f1)
 
 #======================================
 # Helper function - return ethernet interface and ip-address
@@ -104,7 +104,7 @@ init_network_variables() {
 	# Init DHCP_SUBNETS, DHCP_NETMASKS and DHCP_RANGES
 	#--------------------------------------
 	i=0
-	for eth_ in  $AP_INT
+	for eth_ in $WL_IFACE
 		do
 		((i++))
 		local ip_="$SERVER_IP"
@@ -165,7 +165,6 @@ init_network_variables() {
 	if [ ! "$DOMAIN" -o ! "$NAME_SERVERS" -o ! "$GATEWAYS" -o ! "$TFTP_SERVERS" -o ! "$DHCP_RANGES" -o ! "$DHCP_SUBNETS" -o ! "$DHCP_NETMASKS" -o ! "$SERVER_IPS" -o ! "$SERVER_IP" ]; then
 		echo "One or more KIWI LTSP networking variables are empty."
 	fi
-	wl_interface
 }
 init_network_variables
 #echo server ip $SERVER_IP
