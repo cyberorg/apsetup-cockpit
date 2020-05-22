@@ -7,23 +7,25 @@ const result = document.getElementById("result");
 const button = document.getElementById("apapply");
 
 function apsetup_run() {
-  cockpit
-    .spawn(
-      [
-        "/usr/share/cockpit/apsetup/apsetup-cockpit",
-        AP_SSID.value,
-        AP_PASS.value,
-        AP_IP.value,
-        NET_CONNECT.value,
-      ],
-      { superuser: true }
-    )
-    .stream(apapply_output)
-    .then(apapply_success)
-    .catch(apapply_fail);
+  if (document.querySelector("#apform").reportValidity()) {
+    cockpit
+      .spawn(
+        [
+          "/usr/share/cockpit/apsetup/apsetup-cockpit",
+          AP_SSID.value,
+          AP_PASS.value,
+          AP_IP.value,
+          NET_CONNECT.value,
+        ],
+        { superuser: true }
+      )
+      .stream(apapply_output)
+      .then(apapply_success)
+      .catch(apapply_fail);
 
-  result.innerHTML = "";
-  output.innerHTML = "";
+    result.innerHTML = "";
+    output.innerHTML = "";
+  }
 }
 
 function apapply_success() {
