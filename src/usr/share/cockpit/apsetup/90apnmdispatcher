@@ -1,5 +1,6 @@
 #!/bin/bash
 #setup dnsmasq on IP address change
+#setup iptables rule for masquerading
 if [ "$2" = "up" ];then
 	/usr/share/cockpit/apsetup/apdnsmasqsetup 2>/dev/null || true
 	if test -f /etc/ap.conf; then
