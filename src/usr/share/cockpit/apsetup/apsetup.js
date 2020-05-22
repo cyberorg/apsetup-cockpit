@@ -8,15 +8,13 @@ const button = document.getElementById("apapply");
 
 function apsetup_run() {
   if (document.querySelector("#apform").reportValidity()) {
-    cockpit
-      .spawn(
-        [
-          "/usr/share/cockpit/apsetup/apsetup-cockpit",
-          AP_SSID.value,
-          AP_PASS.value,
-          AP_IP.value,
-          NET_CONNECT.value,
-        ],
+    var configfile = 'AP_SSID' + '=' + AP_SSID.value + '\n' +
+		  'AP_PASS' + '=' + AP_PASS.value + '\n' +
+		  'AP_IP' + '=' + AP_IP.value + '\n' +
+		  'NET_CONNECT' + '=' + NET_CONNECT.value + '\n';
+    cockpit.file("/etc/ap.conf", { superuser: "try" }).replace(configfile);
+    cockpit.spawn(
+        [ "/usr/share/cockpit/apsetup/apsetup-cockpit" ],
         { superuser: true }
       )
       .stream(apapply_output)
@@ -42,7 +40,7 @@ function apapply_output(data) {
   output.append(document.createTextNode(data));
 }
 
-// Connect the button to starting the "ping" process
+// Connect the button to starting the AP setup process
 button.addEventListener("click", apsetup_run);
 
 // Send a 'init' message.  This tells integration tests that we are ready to go
