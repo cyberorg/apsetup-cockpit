@@ -1,9 +1,7 @@
-const NAP_SSID = document.getElementById("AP_SSID");
-const NAP_PASS = document.getElementById("AP_PASS");
-const NAP_IP = document.getElementById("AP_IP");
-const NNET_CONNECT = document.getElementById("NET_CONNECT");
-//const NNET_CONNECT_MODE = document.getElementById("NET_CONNECT_MODE");
-const address = document.getElementById("address");
+const AP_SSID = document.getElementById("AP_SSID");
+const AP_PASS = document.getElementById("AP_PASS");
+const AP_IP = document.getElementById("AP_IP");
+const NET_CONNECT = document.getElementById("NET_CONNECT");
 const output = document.getElementById("output");
 const result = document.getElementById("result");
 const button = document.getElementById("apapply");
@@ -13,10 +11,10 @@ function apsetup_run() {
     .spawn(
       [
         "/usr/share/cockpit/apsetup/apsetup-cockpit",
-        NAP_SSID.value,
-        NAP_PASS.value,
-        NAP_IP.value,
-        NNET_CONNECT.value,
+        AP_SSID.value,
+        AP_PASS.value,
+        AP_IP.value,
+        NET_CONNECT.value,
       ],
       { superuser: true }
     )

@@ -64,15 +64,9 @@ cockpit.file("/etc/ap.conf", { superuser: "try" }).read()
         index++;
       }
     }
-    //document.body.innerHTML = result.AP_SSID;
-
-    var AP_SSID = result.AP_SSID;
-    var AP_PASS = result.AP_PASS;
-    var AP_IP = result.AP_IP;
-    var NET_CONNECT = result.NET_CONNECT;
-    document.getElementById("AP_SSID").value = AP_SSID;
-    document.getElementById("AP_PASS").value = AP_PASS;
-    document.getElementById("AP_IP").value = AP_IP;
-    document.getElementById("NET_CONNECT").value = NET_CONNECT;
+    document.getElementById("AP_SSID").value = result.AP_SSID;
+    document.getElementById("AP_PASS").value = result.AP_PASS;
+    document.getElementById("AP_IP").value = result.AP_IP;
+    document.getElementById("NET_CONNECT").value = result.NET_CONNECT;
   });
 
