@@ -7,8 +7,11 @@ if ! grep -q "id=ap" /etc/NetworkManager/system-connections/*; then
 else
 	nmcli con modify ap ssid $1 ipv4.addresses $3/24 wifi-sec.psk "$2"
 fi
-#Set config file permission so only root can read
+#Set config file
 chmod 600 /etc/ap.conf
+sed -i -e s"@AP_SSID=.*@AP_SSID=$1@g" /etc/ap.conf
+sed -i -e s"@AP_PASS=.*@AP_PASS=$2@g" /etc/ap.conf
+sed -i -e s"@AP_IP=.*@AP_IP=$3@g" /etc/ap.conf
 #Setting for iptable MASQUERADE
 sed -i -e s"@NET_CONNECT=.*@NET_CONNECT=$4@g" /etc/ap.conf
 #Copy the NM dispatcher script to set up iptables rule and dnsmasq dhcp server
