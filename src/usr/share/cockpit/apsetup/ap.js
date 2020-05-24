@@ -16,7 +16,7 @@ cockpit.file("/etc/ap.conf", { superuser: "try" }).read()
     while (index < file.length) {
       let at = file[index];
       if (state === "default") {
-        if (at === ";") {
+        if (at === ";" || at === "#") {
           state = "comment";
         } else if (at === "[") {
           state = "section";
