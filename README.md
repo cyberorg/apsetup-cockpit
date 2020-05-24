@@ -4,7 +4,11 @@ Wifi Access Point setup cockpit module.
 Needs **dnsmasq** and a system using **Network Manager**
 
 ```console
-cp src/etc/ap.conf /etc/
+#Automatic install
+wget -O - https://raw.githubusercontent.com/cyberorg/apsetup-cockpit/master/install.sh | sudo bash
+
+#Manual install after git checkout
+cp src/etddc/ap.conf /etc/
 cp -r src/usr/share/cockpit/apsetup /usr/share/cockpit/
 ```
 
