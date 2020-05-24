@@ -11,7 +11,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 mkdir -p /usr/share/cockpit/apsetup
 cd /usr/share/cockpit/apsetup/
-for i in networkvariables.sh ap.js apsetup.js index.html manifest.json apdnsmasqsetup 90apnmdispatcher network.css.gz; do
+for i in networkvariables.sh apsetup.js index.html manifest.json apdnsmasqsetup 90apnmdispatcher network.css.gz; do
 	wget -c https://raw.githubusercontent.com/cyberorg/apsetup-cockpit/ako/src/usr/share/cockpit/apsetup/$i
 done
 echo -e "${GREEN} Cockpit APsetup plugin installed"
