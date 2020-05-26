@@ -1,21 +1,30 @@
-var CVAR = [ "AP_SSID", "AP_PASS", "AP_IP", "NET_CONNECT", "output", "result", "apapply" ];
+var CVAR = [ "AP_SSID", "AP_PASS", "AP_IP", "NET_CONNECT", "AP_IFACE", "output", "result", "apapply" ];
 VLen = CVAR.length;
 var x = "",
   i;
 for (i = 0; i < VLen; i++) {
   x = x + `const CVAR[i] = document.getElementById(CVAR[i])`;
 }
-cockpit
-  .spawn(["bash", "-c", "ifconfig -a|grep wl|cut -d : -f1"], {
-    superuser: true,
-  })
-  .stream(wl_output);
+function get_wl() {
+  cockpit
+    .spawn(["bash", "-c", "ifconfig -a|grep wl|cut -d : -f1"], {
+      superuser: true,
+    })
+    .stream(wl_output);
+}
 function check_id() {
-	  cockpit
-  .spawn(["bash", "-c", "grep -q 'id=ap' /etc/NetworkManager/system-connections/ap* 2>/dev/null; echo $?"], {
-    superuser: true,
-  })
-  .stream(id_output);
+  cockpit
+    .spawn(
+      [
+        "bash",
+        "-c",
+        "grep -q 'id=ap' /etc/NetworkManager/system-connections/ap* 2>/dev/null; echo $?",
+      ],
+      {
+        superuser: true,
+      }
+    )
+    .stream(id_output);
 }
 check_id();
 function apsetup_run() {
@@ -40,13 +49,13 @@ function apsetup_run() {
       "ID_OUT" +
       "=" +
       idout +
-      "WL_IFACE" +
+      "AP_IFACE" +
       "=" +
-      wl;
+      AP_IFACE.value +
+      "\n";
     cockpit.file("/etc/ap.conf", { superuser: "try" }).replace(configfile);
     function spawncmd() {
-      if ( idout == 0
-      ) {
+      if (idout == 0) {
         cockpit
           .spawn(
             [
@@ -114,17 +123,18 @@ function apapply_output(data) {
 }
 
 function wl_output(wldata) {
-  window.wl = wldata;
+  document.getElementById("AP_IFACE").value = wldata;
 }
 function id_output(iddata) {
   window.idout = iddata;
 }
 
-
 // Connect the button to starting the AP setup process
 apapply.addEventListener("click", apsetup_run);
 
-cockpit.file("/etc/ap.conf", { superuser: "try" }).read()
+cockpit
+  .file("/etc/ap.conf", { superuser: "try" })
+  .read()
   .then((file) => {
     function isWhiteSpace(at) {
       if (at === "\t" || at === " ") {
@@ -194,6 +204,11 @@ cockpit.file("/etc/ap.conf", { superuser: "try" }).read()
     document.getElementById("AP_PASS").value = result.AP_PASS;
     document.getElementById("AP_IP").value = result.AP_IP;
     document.getElementById("NET_CONNECT").value = result.NET_CONNECT;
+    if (result.AP_IFACE) {
+      document.getElementById("AP_IFACE").value = result.AP_IFACE;
+    } else {
+      get_wl();
+    }
   });
 // Send a 'init' message.  This tells integration tests that we are ready to go
 cockpit.transport.wait(function () {});
