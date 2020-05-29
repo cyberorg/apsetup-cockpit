@@ -5,6 +5,10 @@ var x = "",
 for (i = 0; i < VLen; i++) {
   x = x + `const CVAR[i] = document.getElementById(CVAR[i])`;
 }
+cockpit
+    .spawn(["bash", "-c", "if ! test -f /etc/ap.conf; then touch /etc/ap.conf && chmod 600 /etc/ap.conf; fi"], {
+      superuser: true,
+    })
 function get_wl() {
   cockpit
     .spawn(["bash", "-c", "ifconfig -a|grep wl|cut -d : -f1"], {
@@ -200,12 +204,28 @@ cockpit
         index++;
       }
     }
-    document.getElementById("AP_SSID").value = result.AP_SSID;
-    document.getElementById("AP_PASS").value = result.AP_PASS;
-    document.getElementById("AP_IP").value = result.AP_IP;
-    document.getElementById("NET_CONNECT").value = result.NET_CONNECT;
+    if (result.AP_SSID) {
+        document.getElementById("AP_SSID").value = result.AP_SSID;
+    } else {
+	document.getElementById("AP_SSID").value = "AKOBOX";
+    }
+    if (result.AP_PASS) {
+	document.getElementById("AP_PASS").value = result.AP_PASS;
+    } else {
+        document.getElementById("AP_PASS").value = "12345678";
+    }
+    if (result.AP_IP) {
+        document.getElementById("AP_IP").value = result.AP_IP;
+    } else {
+        document.getElementById("AP_IP").value = "192.168.0.1";
+    }
+    if (result.NET_CONNECT) {
+        document.getElementById("NET_CONNECT").value = result.NET_CONNECT;
+    } else {
+        document.getElementById("NET_CONNECT").value = "true";
+    }
     if (result.AP_IFACE) {
-      document.getElementById("AP_IFACE").value = result.AP_IFACE;
+        document.getElementById("AP_IFACE").value = result.AP_IFACE;
     } else {
       get_wl();
     }
