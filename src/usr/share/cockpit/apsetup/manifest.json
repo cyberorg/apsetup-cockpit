@@ -3,7 +3,7 @@
 
     "tools": {
         "apsetup": {
-            "label": "APsetup",
+            "label": "Access Point",
             "path": "index.html"
         }
     }
