@@ -10,4 +10,5 @@ for i in networkvariables.sh apsetup.js index.html manifest.json apdnsmasqsetup 
 	wget https://raw.githubusercontent.com/cyberorg/apsetup-cockpit/ako/src/usr/share/cockpit/apsetup/$i -O /usr/share/cockpit/apsetup/$i
 done
 chmod +x /usr/share/cockpit/apsetup/apdnsmasqsetup /usr/share/cockpit/apsetup/90apnmdispatcher
+cp /usr/share/cockpit/apsetup/90apnmdispatcher /etc/NetworkManager/dispatcher.d/90apnmdispatcher
 echo -e "Cockpit APsetup plugin installed"
