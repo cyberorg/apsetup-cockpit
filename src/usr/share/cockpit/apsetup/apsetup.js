@@ -76,7 +76,7 @@ function apsetup_run() {
             [
               "bash",
               "-c",
-              "echo Please wait...;. /etc/ap.conf; nmcli con add type wifi ifname $WL_IFACE con-name ap autoconnect yes ssid $AP_SSID ipv4.method manual ipv4.addresses $AP_IP/24 wifi-sec.key-mgmt wpa-psk wifi-sec.psk $AP_PASS 802-11-wireless.mode ap",
+              "echo Please wait...;. /etc/ap.conf; nmcli con add type wifi ifname $AP_IFACE con-name ap autoconnect yes ssid $AP_SSID ipv4.method manual ipv4.addresses $AP_IP/24 wifi-sec.key-mgmt wpa-psk wifi-sec.psk $AP_PASS 802-11-wireless.mode ap",
             ],
             { superuser: true }
           )
