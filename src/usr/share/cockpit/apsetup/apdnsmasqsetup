@@ -20,6 +20,7 @@
 #This script sets up dnsmasq dhcp server for the Access Point clients
 . /usr/share/cockpit/apsetup/networkvariables.sh
 sysctl -w net.ipv4.ip_forward=1
+ln -snf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 ln -snf /etc/resolv.conf /run/dnsmasq/resolv.conf
 export sub_net="`echo $DHCP_SUBNETS  | cut -f$i -d' ' `"
 export netmask="`echo $DHCP_NETMASKS | cut -f$i -d' ' `"
