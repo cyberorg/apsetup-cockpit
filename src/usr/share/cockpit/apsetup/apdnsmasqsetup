@@ -44,6 +44,7 @@ else
 	sed -i -e s"@address=/mss.*@address=/mss.server/$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
 	sed -i -e s"@address=/ako.*@address=/ako.home/$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
 	sed -i -e s"@address=/myscoolserver.*@address=/myscoolserver.in/$SERVER_IP@g" /etc/dnsmasq.d/hotspot.conf
+	sed -i -e s"@server=/app.myscoolserver.*@server=/app.myscoolserver.in/$NAME_SERVERS@g" /etc/dnsmasq.d/hotspot.conf
 fi
 if ! grep -q mss.server /etc/hosts; then
 	echo -e "$SERVER_IP\tmss.server" >> /etc/hosts
