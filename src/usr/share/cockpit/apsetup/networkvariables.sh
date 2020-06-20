@@ -11,7 +11,7 @@ wl_interface(){
 }
 wl_interface
 AP_IP=$(ip address | awk '/inet6/{next} /inet.*/{print $2 " " $NF }' | grep $WL_IFACE | cut -d / -f1)
-
+NAME_SERVERS=$(grep -m 1 ^nameserver /etc/resolv.conf | cut -d " " -f2) 2>/dev/null
 #======================================
 # Helper function - return ethernet interface and ip-address
 # created for easy testing
