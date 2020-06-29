@@ -1,7 +1,7 @@
 # apsetup-cockpit
 Wifi Access Point setup cockpit module.
 
-Needs **dnsmasq** and a system using **Network Manager**
+Needs **dnsmasq** and a system using **Network Manager**. Set **DNSStubListener=no** in **/etc/systemd/resolved.conf** if using systemd-resolved to allow dnsmasq to run.
 
 ```console
 #Automatic install
