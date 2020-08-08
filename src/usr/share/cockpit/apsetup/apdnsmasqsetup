@@ -54,7 +54,8 @@ fi
 if ! grep -q myscoolserver.in /etc/hosts; then
 	echo -e "$SERVER_IP\tmyscoolserver.in" >> /etc/hosts
 else
-	sed -i -e s"@.*myscoolserver.*@$SERVER_IP\tmyscoolserver.in@g" /etc/hosts
+       sed -i -e s"@.*\tmyscoolserver.*@$SERVER_IP\tmyscoolserver.in@g" /etc/hosts
+        sed -i -e s"@.*\tkolibri.myscoolserver.*@$SERVER_IP\tkolibri.myscoolserver.in@g" /etc/hosts
 fi
 if ! grep -q ako.home /etc/hosts; then
 	echo -e "$SERVER_IP\tako.home" >> /etc/hosts
