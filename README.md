@@ -11,6 +11,7 @@ wget -O - https://raw.githubusercontent.com/cyberorg/apsetup-cockpit/master/inst
 cp src/etddc/ap.conf /etc/
 cp -r src/usr/share/cockpit/apsetup /usr/share/cockpit/
 ```
+Ubuntu PPA https://launchpad.net/~jigish-gohil/+archive/ubuntu/cockpit-experiments
 
 ![](apsetup.gif)
 
