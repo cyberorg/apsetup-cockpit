@@ -1,3 +1,7 @@
+cockpit
+    .spawn(["bash", "-c", "if ! test -f /etc/ap.conf; then touch /etc/ap.conf && chmod 600 /etc/ap.conf; fi"], {
+      superuser: true,
+    })
 var CVAR = [ "AP_SSID", "AP_PASS", "AP_IP", "NET_CONNECT", "AP_IFACE", "output", "result", "apapply" ];
 VLen = CVAR.length;
 var x = "",
@@ -5,10 +9,6 @@ var x = "",
 for (i = 0; i < VLen; i++) {
   x = x + `const CVAR[i] = document.getElementById(CVAR[i])`;
 }
-cockpit
-    .spawn(["bash", "-c", "if ! test -f /etc/ap.conf; then touch /etc/ap.conf && chmod 600 /etc/ap.conf; fi"], {
-      superuser: true,
-    })
 function get_wl() {
   cockpit
     .spawn(["bash", "-c", "ifconfig -a|grep wl|cut -d : -f1"], {
